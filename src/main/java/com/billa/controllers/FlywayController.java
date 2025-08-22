@@ -66,6 +66,7 @@ public class FlywayController {
         return repository.findAll();
     }
 
+
     @GetMapping("/fetch/{id}")
     public Orders fetchOne(@PathVariable Long id) {
         return repository.findById(id);
@@ -75,5 +76,6 @@ public class FlywayController {
     public boolean delete(@PathVariable Long id) {
         return repository.deleteById(id) == 1;
     }
+
 }
 
