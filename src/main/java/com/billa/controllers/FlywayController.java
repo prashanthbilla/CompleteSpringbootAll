@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/v1")
@@ -21,7 +23,7 @@ public class FlywayController {
 
 
     @GetMapping("")
-    public ResponseEntity<String> show(){
+    public ResponseEntity<String> show() {
         PersonAndAddress personAndAddress = new PersonAndAddress();
         personAndAddress.setId((long) 1);
         personAndAddress.setAddressAmount(5000);
@@ -32,23 +34,46 @@ public class FlywayController {
         personAndAddress.setAddressId((long) 100);
         Prashanth prashanth = MapperInterface.INSTANCE.mapperPrashantFromPersonAndAddress(personAndAddress);
         prashanth.setName("Prashanth");
-        System.out.println(" Person :  "+prashanth);
+        System.out.println(" Person :  " + prashanth);
 
         Company company = new Company("BillaCompany", "Hyderabad");
 
         PersonDetails personDetails = MapperInterface.INSTANCE.mapperPersonAndCompnayToPersonDetails(company, prashanth);
         personDetails.setEmail("billa@gmail.com");
-        System.out.println(" Person Details :  "+personDetails);
-
-
+        System.out.println(" Person Details :  " + personDetails);
 
 
         return new ResponseEntity<>("Welcome to Application", HttpStatus.OK);
     }
 
     @PostMapping("/save")
-    public Orders save(@RequestBody Orders orders){
+    public Orders save(@RequestBody Orders orders) {
         return repository.save(orders);
+    }
+
+    @PostMapping("/saveAll")
+    public List<Orders> saveAll(@RequestBody List<Orders> orders) {
+        return repository.saveAll(orders);
+    }
+
+    @PutMapping("/update")
+    public Orders update(@RequestBody Orders orders) {
+        return repository.update(orders);
+    }
+
+    @GetMapping("/fetchAll")
+    public List<Orders> fetchAll() {
+        return repository.findAll();
+    }
+
+    @GetMapping("/fetch/{id}")
+    public Orders fetchOne(@PathVariable Long id) {
+        return repository.findById(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public boolean delete(@PathVariable Long id) {
+        return repository.deleteById(id) == 1;
     }
 }
 

@@ -21,6 +21,7 @@ class ControllerTest {
 
     @TestConfiguration
     static class MockConfig {
+
         @Bean
         FlywayRepository repository() {
             return Mockito.mock(FlywayRepository.class);
@@ -32,5 +33,10 @@ class ControllerTest {
         mockMvc.perform(get("/v1"))   // since @GetMapping("") → root of controller’s @RequestMapping
                 .andExpect(status().isOk())
                 .andExpect(content().string("Welcome to Application")); // ✅ assert response body
+    }
+
+    @Test
+    void testShowEndpoint2() throws Exception {
+
     }
 }
