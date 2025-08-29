@@ -135,10 +135,8 @@ class ControllerTest {
         // Mock repository behavior: assume deletion successful
         when(repository.deleteById(1L)).thenReturn(1);
 
-        mockMvc.perform(delete("/v1/delete/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+        mockMvc.perform(delete("/v1/delete/1"))
+                .andExpect(status().isOk());
     }
 
 

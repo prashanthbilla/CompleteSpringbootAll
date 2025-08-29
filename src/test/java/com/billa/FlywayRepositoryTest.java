@@ -14,6 +14,7 @@ import java.util.List;
 
 import static com.billa.jooq.Tables.ORDERS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -215,6 +216,27 @@ class FlywayRepositoryTest {
         verify(updateStepMore).where(ORDERS.ID.eq(input.getId()));
         verify(updateConditionStep).execute();
     }
+
+    @Test
+    void testUpdateForIdNotFoundException() {
+        Orders input = new Orders();
+        input.setId(1L);
+        input.setPersonId(20L);
+        input.setAmount(1000);
+
+        when(dsl.update(ORDERS)).thenReturn(updateStepFirst);
+        when(updateStepFirst.set(ORDERS.PERSON_ID, input.getPersonId())).thenReturn(updateStepMore);
+        when(updateStepMore.set(ORDERS.AMOUNT, input.getAmount())).thenReturn(updateStepMore);
+        when(updateStepMore.where(ORDERS.ID.eq(input.getId()))).thenReturn(updateConditionStep);
+        when(updateConditionStep.execute()).thenReturn(0);
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            repository.update(input);
+        });
+
+        assertEquals("No order found with ID " + input.getId(), ex.getMessage());
+    }
+
 
     @Test
     void testDeleteById() {
